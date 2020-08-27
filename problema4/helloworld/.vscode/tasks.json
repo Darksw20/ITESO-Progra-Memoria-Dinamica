@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "process",
+			"label": "C/C++: compilacion a g++.exe",
+			"command": "C:\\MinGW\\bin\\g++.exe",
+			"args": [
+				"-o",
+				"${fileBasenameNoExtension}",
+				"${file}",
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
