@@ -1,6 +1,5 @@
 #include "stdio.h"
 
-/*
 void strrem(char *input, char target){
     while(*input != '\0'){
         if(*input == target){
@@ -15,8 +14,8 @@ void strrem(char *input, char target){
         }
     }
 }
+/*
 
-*/
 
 void strrem(char* input, char target) {
     char* temp = input;
@@ -31,6 +30,7 @@ void strrem(char* input, char target) {
     }
     *current = '\0';
 }
+*/
 
 int main(){
     char hello[] = "Hola mundo";
