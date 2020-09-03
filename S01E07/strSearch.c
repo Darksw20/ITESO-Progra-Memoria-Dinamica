@@ -1,7 +1,6 @@
 #include "stdio.h"
 
 int strsearch(char* input, char* pattern) {
-  int flag = 0, res;
   for(int counter = 0;*input != '\0';input++, counter++){
     if(*pattern == *input){
       char *tempInp = input, *tempPat = pattern;
@@ -10,18 +9,14 @@ int strsearch(char* input, char* pattern) {
         input++;
       }
       if(*pattern == '\0'){
-        res = counter;
-        flag = 1;
+        return counter;
       }else{
         input = tempInp;
         pattern = tempPat;
       }
     }
   }
-  if(flag != 1){
-    res = -1;
-  }
-  return res;
+  return -1;
 }
 
 int main(){
