@@ -71,13 +71,5 @@ void RegularizeChatLog(struct ChatLog* log) {
 int main(){
     
     RegularizeChatLog(&logs);
-/*
-    for(int i=0; i<(log -> posts)[i];i++){
-        struct ChatLog *a = logs[i];
-        for (int j=0; j<;j++){
-            printf("%s \n", a->posts);
-        }
-    }
-*/
     return 0;
 }
