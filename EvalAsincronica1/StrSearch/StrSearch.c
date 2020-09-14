@@ -19,6 +19,7 @@ int strsearch(char* input, char* pattern) {
       }
     }
   }
+  
   return -1;
 }
 
