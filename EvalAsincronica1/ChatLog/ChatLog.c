@@ -18,7 +18,7 @@ void RegularizeChatLog(struct ChatLog* log);
 int main(void){
     struct ChatLog posts = {
         
-    }
+    };
     printf("Hola mundo");
 }
 
