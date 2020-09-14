@@ -13,12 +13,12 @@ int MakeItDouble(int);
 
 int main(void){
     ArrayMap(arr,3,MakeItDouble);
-    printf("Hola mundo");
 }
-void ArrayMap(int* target, int size, int (*DoubleIt)(int)) {
-
+void ArrayMap(int* target, int size, int (*apply)(int)) {
+    for(int i=0;i<size;i++,target++){
+        *target = apply(*target);
+    }
 }
 int MakeItDouble(int number){
-
-    return 0;
+    return number *= 2;
 }
