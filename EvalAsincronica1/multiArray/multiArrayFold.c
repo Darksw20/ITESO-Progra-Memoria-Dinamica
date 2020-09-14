@@ -37,7 +37,14 @@ int main(void){
 }
 
 void FoldMultiArray(int** multiArray, int size, int* result) {
-    printf("%d \n",multiArray[0][0]);
+    for(int i = 0;i<size;i++){
+        int var = arr[i][0];
+        int res = 0;
+        for(int j=0;j<var;j++){
+            res += arr[i][j+1];
+        }
+        //result.append(res)
+    }
 }
 void PrintVector(int* result){
 
