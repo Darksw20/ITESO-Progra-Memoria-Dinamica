@@ -20,32 +20,29 @@ int array2[4][4] = {
     {0},
     {2,10,10}
 };
-int** arr = array1;
+//int** arr[4][4] = array1;
 void* res1;
 void* res2;
 void FoldMultiArray(int** multiArray, int size, int* result);
 void PrintVector(int* result);
 
 int main(void){
-    FoldMultiArray(arr,4,res1);
+    FoldMultiArray(array1,4,res1);
     printf("Caso 1:\nVector resultante: ");
     PrintVector(res1);
-    arr = array2;
-    FoldMultiArray(arr,4,res2);
-    printf("Caso 2:\nVector resultante: ");
-    PrintVector(res2);
 }
 
 void FoldMultiArray(int** multiArray, int size, int* result) {
-    for(int i = 0;i<size;i++){
-        int var = arr[i][0];
+    for(int i=0;i<size;i++){
+        int var = multiArray[i][0];
         int res = 0;
         for(int j=0;j<var;j++){
-            res += arr[i][j+1];
+            res += multiArray[i][j+1];
         }
-        //result.append(res)
+        *result = res;
+        result++;
     }
 }
 void PrintVector(int* result){
-
+    
 }
