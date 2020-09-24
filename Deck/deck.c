@@ -4,13 +4,14 @@
 #include <string.h>
 
 char* hand = NULL;
-char outCondition = 's';
+char option = 's';
+int cantCards = 5;
 
 void printDeck(char**);
 void initDeck(char**);
-void freeDeck(char** deck);
+void freeDeck(char**);
 
-void pull();
+void pull(char**,char*);
 void top();
 void bottom();
 void discard();
@@ -23,27 +24,58 @@ void discard();
 int main(void){
     char** deck = (char**) calloc(5,sizeof(char*));
     initDeck(deck);
-    while (outCondition != 'e'){
+    while (option != 'e'){
+        printf("%s",hand);
         if(hand == NULL){
             printf("En su deck se encuentran las siguientes cartas:\n");
             printDeck(deck);
             printf("¿Que desea hacer?\n[p]ull para robar una carta\n[e]xit para salir\n");
+            fflush(stdin);
+            scanf("%c",&option);
+            switch (option){
+                case 'p':
+                    pull(deck, hand);
+                    break;
+                case 'e':
+                    printf("Gracias por Jugar.\n");
+                    break;
+                default:
+                    printf("Opción no valida. Intente de nuevo\n");
+                    break;
+            }
         }else{
             printf("En su deck se encuentran las siguientes cartas:\n");
             printDeck(deck);
             printf("En su mano se encuentra la siguiente carta <%s>\n",hand);
             printf("¿Que desea hacer?\n[t]op para regresarla a la parte superior\n");
             printf("[b]ottom para regresarla a la parte inferior\n[d]iscard para descartarla\n[e]xit para salir\n");
+            fflush(stdin);
+            scanf("%c",&option);
+            switch (option){
+                case 't':
+                    /* code */
+                    break;
+                case 'b':
+                    /* code */
+                    break;
+                case 'd':
+                    /* code */
+                    break;
+                case 'e':
+                    printf("Gracias por Jugar.\n");
+                    break;
+                default:
+                    printf("Opción no valida. Intente de nuevo\n");
+                    break;
+            }
         }
-
-        printf("¿Desea salir del programa?\ne = exit | s = stay\n");
-        scanf("%c",&outCondition);
     }
     freeDeck(deck);
 }
 
-void pull(){
-
+void pull(char** deck,char* hand){
+    hand = deck[cantCards-1];
+    deck[cantCards-1] = NULL;
 }
 
 void top(){
@@ -82,7 +114,9 @@ void freeDeck(char** deck){
 
 void printDeck(char** deck){
     for(int i=0;i<5;i++){
-        printf("[%s]\t",deck[i]);
+        if(deck[i] != NULL){
+            printf("[%s]\t",deck[i]);
+        }
     }
     printf("\n");
 }
