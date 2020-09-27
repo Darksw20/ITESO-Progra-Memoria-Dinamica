@@ -3,38 +3,44 @@
 #include <time.h>
 #include <string.h>
 
-char* hand = NULL;
+struct Deck{
+    int cantCards;
+    char hand;
+    char* cards;
+};
+
+
 char option = 's';
 int cantCards = 5;
 
-void printDeck(char**);
-void initDeck(char**);
-void freeDeck(char**);
+void printDeck(struct Deck*);
+void initDeck(struct Deck*);
+void freeDeck(struct Deck*);
 
-void pull(char**,char*);
-void top();
-void bottom();
-void discard();
+void pull(struct Deck*);
+void top(struct Deck*);
+void bottom(struct Deck*);
+void discard(struct Deck*);
 
-//TODO: Pull
-//TODO: Top
-//TODO: Bottom
-//TODO: Discard
+//DONE: Pull
+//DONE: Top
+//DONE: Bottom
+//DONE: Discard
 
 int main(void){
-    char** deck = (char**) calloc(5,sizeof(char*));
-    initDeck(deck);
+    struct Deck deck;
+    initDeck(&deck);
     while (option != 'e'){
-        printf("%s",hand);
-        if(hand == NULL){
+        if(deck.hand == '0'){
+            printf("----------------------------------------------------\n");
             printf("En su deck se encuentran las siguientes cartas:\n");
-            printDeck(deck);
+            printDeck(&deck);
             printf("¿Que desea hacer?\n[p]ull para robar una carta\n[e]xit para salir\n");
             fflush(stdin);
             scanf("%c",&option);
             switch (option){
                 case 'p':
-                    pull(deck, hand);
+                    pull(&deck);
                     break;
                 case 'e':
                     printf("Gracias por Jugar.\n");
@@ -44,22 +50,27 @@ int main(void){
                     break;
             }
         }else{
+            printf("----------------------------------------------------\n");
             printf("En su deck se encuentran las siguientes cartas:\n");
-            printDeck(deck);
-            printf("En su mano se encuentra la siguiente carta <%s>\n",hand);
+            printDeck(&deck);
+            if(deck.hand == 'D'){
+                printf("En su mano se encuentra la siguiente carta <10>\n");
+            }else{
+                printf("En su mano se encuentra la siguiente carta <%c>\n",deck.hand);
+            }
             printf("¿Que desea hacer?\n[t]op para regresarla a la parte superior\n");
             printf("[b]ottom para regresarla a la parte inferior\n[d]iscard para descartarla\n[e]xit para salir\n");
             fflush(stdin);
             scanf("%c",&option);
             switch (option){
                 case 't':
-                    /* code */
+                    top(&deck);
                     break;
                 case 'b':
-                    /* code */
+                    bottom(&deck);
                     break;
                 case 'd':
-                    /* code */
+                    discard(&deck);
                     break;
                 case 'e':
                     printf("Gracias por Jugar.\n");
@@ -70,52 +81,63 @@ int main(void){
             }
         }
     }
-    freeDeck(deck);
+    
 }
 
-void pull(char** deck,char* hand){
-    hand = deck[cantCards-1];
-    deck[cantCards-1] = NULL;
-}
-
-void top(){
-
-}
-
-void bottom(){
-
-}
-
-void discard(){
-
-}
-
-void initDeck(char** deck){
-    char* initialDeck[5] = {"10","J","Q","K","A"};
-    for(int i=0;i<5;i++){
-        deck[i] = (char*)calloc(2,sizeof(char));
-        strcpy(deck[i],initialDeck[i]);
+void pull(struct Deck* deck){
+    if(deck->hand == '0' && deck->cantCards > 0){
+        deck->hand = deck->cards[deck->cantCards-1];
+        deck->cards[deck->cantCards-1] = '0';
+        deck->cantCards--;
+    }else{
+        printf("Error: ya tiene carta en mano o no hay mas cartas que robar\n");
     }
+}
+
+void top(struct Deck* deck){
+    deck->cards[deck->cantCards] = deck->hand;
+    deck->hand = '0';
+    deck->cantCards++;
+}
+
+void bottom(struct Deck* deck){
+    for(int i = deck->cantCards;i >= 0 ;i--)
+        deck->cards[i+1] = deck->cards[i];
+    deck->cards[0] = deck->hand;
+    deck->hand = '0';
+    deck->cantCards++;
+}
+
+void discard(struct Deck* deck){
+    if(deck->hand != '0')
+        deck->hand = '0';
+}
+
+void initDeck(struct Deck* deck){
+    char initialDeck[] = {'D','J','Q','K','A'};
+    deck->cantCards = 5;
+    deck->cards = calloc(5,sizeof(char));
+    deck->hand = '0';
+ 
     srand(time(NULL));
     for (int i = 0; i < 5; i++){
         int r1 = rand() % 5;
         int r2 = rand() % 5;
-        void* temp = deck[r1];
-        deck[r1] = deck[r2];
-        deck[r2] = temp;
+        char temp = initialDeck[r1];
+        initialDeck[r1] = initialDeck[r2];
+        initialDeck[r2] = temp;
+    }
+    for(int i = 0;i < 5;i++){
+        deck->cards[i] = initialDeck[i];
     }
 }
 
-void freeDeck(char** deck){
-    for(int i = 0;i < 5;i++)
-        free(deck[i]);
-    free(deck); 
-}
-
-void printDeck(char** deck){
-    for(int i=0;i<5;i++){
-        if(deck[i] != NULL){
-            printf("[%s]\t",deck[i]);
+void printDeck(struct Deck* deck){
+    for(int i=0;i<deck->cantCards;i++){
+        if(deck->cards[i] == 'D'){
+            printf("[10]\t");
+        }else{
+            printf("[%c]\t",deck->cards[i]);
         }
     }
     printf("\n");
