@@ -15,7 +15,8 @@ void initDeck(GameState);
 void playDeckGame(GameState);
 void printDeck(GameState);
 void pull(GameState);
-
+GameState load(GameState);
+void save(GameState);
 void top(GameState);
 void bottom(GameState);
 void discard(GameState);

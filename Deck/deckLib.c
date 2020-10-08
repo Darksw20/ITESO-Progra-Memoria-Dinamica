@@ -4,6 +4,10 @@
 #include <string.h>
 #include "deckLib.h"
 
+//TODO: Load
+//TODO: Save
+//DONE: SaveDialog
+
 GameState newDeckGame(){
     GameState game = malloc(sizeof(struct DeckGame));
     game->cantCards = 5;
@@ -34,12 +38,16 @@ void playDeckGame(GameState game){
             printf("----------------------------------------------------\n");
             printf("En su deck se encuentran las siguientes cartas:\n");
             printDeck(game);
-            printf("¿Que desea hacer?\n[p]ull para robar una carta\n[e]xit para salir\n");
+            printf("¿Que desea hacer?\n[p]ull para robar una carta\n[l]oad para cargar el juego\n[e]xit para salir\n");
             fflush(stdin);
             scanf("%c",&game->option);
             switch (game->option){
                 case 'p':
                     pull(game);
+                    break;
+                case 'l':
+                    game = load(game);
+                    printf("¡Juego Cargado!\n");
                     break;
                 case 'e':
                     printf("Gracias por Jugar.\n");
@@ -58,7 +66,7 @@ void playDeckGame(GameState game){
                 printf("En su mano se encuentra la siguiente carta <%c>\n",game->hand);
             }
             printf("¿Que desea hacer?\n[t]op para regresarla a la parte superior\n");
-            printf("[b]ottom para regresarla a la parte inferior\n[d]iscard para descartarla\n[e]xit para salir\n");
+            printf("[b]ottom para regresarla a la parte inferior\n[d]iscard para descartarla\n[s]ave para guardar\n[e]xit para salir\n");
             fflush(stdin);
             scanf("%c",&game->option);
             switch (game->option){
@@ -70,6 +78,10 @@ void playDeckGame(GameState game){
                     break;
                 case 'd':
                     discard(game);
+                    break;
+                case 's':
+                    save(game);
+                    printf("¡Juego Guardado!\n");
                     break;
                 case 'e':
                     printf("Gracias por Jugar.\n");
@@ -126,3 +138,24 @@ void printDeck(GameState game){
     }
     printf("\n");
 }
+
+void save(GameState game){
+    FILE* bin = fopen("save_data.bin","wb+");
+    fwrite(game,sizeof(GameState),1,bin);
+    rewind(bin);
+    fclose(bin);
+}
+
+GameState load(GameState game){
+    FILE* bin;
+    if((bin = fopen("save_data.bin","wb+")) == NULL){
+        printf("Error: En apertura del archivo");
+        exit(1);
+    }
+    fread(game,sizeof(GameState),1,bin);
+    printDeck(game);
+    rewind(bin);
+    fclose(bin);
+    return game;
+}
+
