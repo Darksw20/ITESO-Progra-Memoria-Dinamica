@@ -20,8 +20,6 @@ void save(GameState);
 void top(GameState);
 void bottom(GameState);
 void discard(GameState);
-
 void endDeckGame(GameState);
-
 
 #endif

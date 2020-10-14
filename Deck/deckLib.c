@@ -3,10 +3,7 @@
 #include <time.h>
 #include <string.h>
 #include "deckLib.h"
-
-//TODO: Load
-//TODO: Save
-//DONE: SaveDialog
+#include "deckSerializers.h"
 
 GameState newDeckGame(){
     GameState game = malloc(sizeof(struct DeckGame));
@@ -38,12 +35,16 @@ void playDeckGame(GameState game){
             printf("----------------------------------------------------\n");
             printf("En su deck se encuentran las siguientes cartas:\n");
             printDeck(game);
-            printf("¿Que desea hacer?\n[p]ull para robar una carta\n[l]oad para cargar el juego\n[e]xit para salir\n");
+            printf("¿Que desea hacer?\n[p]ull para robar una carta\n[s]ave para guardar\n[l]oad para cargar el juego\n[e]xit para salir\n");
             fflush(stdin);
             scanf("%c",&game->option);
             switch (game->option){
                 case 'p':
                     pull(game);
+                    break;
+                case 's':
+                    save(game);
+                    printf("¡Juego Guardado!\n");
                     break;
                 case 'l':
                     game = load(game);
@@ -66,7 +67,7 @@ void playDeckGame(GameState game){
                 printf("En su mano se encuentra la siguiente carta <%c>\n",game->hand);
             }
             printf("¿Que desea hacer?\n[t]op para regresarla a la parte superior\n");
-            printf("[b]ottom para regresarla a la parte inferior\n[d]iscard para descartarla\n[s]ave para guardar\n[e]xit para salir\n");
+            printf("[b]ottom para regresarla a la parte inferior\n[d]iscard para descartarla\n[s]ave para guardar\n[l]oad para cargar el juego\n[e]xit para salir\n");
             fflush(stdin);
             scanf("%c",&game->option);
             switch (game->option){
@@ -82,6 +83,10 @@ void playDeckGame(GameState game){
                 case 's':
                     save(game);
                     printf("¡Juego Guardado!\n");
+                    break;
+                case 'l':
+                    game = load(game);
+                    printf("¡Juego Cargado!\n");
                     break;
                 case 'e':
                     printf("Gracias por Jugar.\n");
@@ -132,6 +137,7 @@ void printDeck(GameState game){
     for(int i=0;i<game->cantCards;i++){
         if(game->cards[i] == 'D'){
             printf("[10]\t");
+        }else if(game->cards[i] == '0'){
         }else{
             printf("[%c]\t",game->cards[i]);
         }
@@ -140,22 +146,28 @@ void printDeck(GameState game){
 }
 
 void save(GameState game){
-    FILE* bin = fopen("save_data.bin","wb+");
-    fwrite(game,sizeof(GameState),1,bin);
+    unsigned char* data;
+    data = serializer(game);
+    FILE* bin;
+    if((bin = fopen("./Data/save_data.bin","wb+")) == NULL){
+        printf("Error: En apertura del archivo");
+        exit(1);
+    }
+    fwrite(data,sizeof(char),2,bin);
     rewind(bin);
     fclose(bin);
 }
 
 GameState load(GameState game){
+    unsigned char data[2];
     FILE* bin;
-    if((bin = fopen("save_data.bin","wb+")) == NULL){
+    if((bin = fopen("./Data/save_data.bin","rb")) == NULL){
         printf("Error: En apertura del archivo");
         exit(1);
     }
-    fread(game,sizeof(GameState),1,bin);
-    printDeck(game);
+    fread(data,sizeof(char),2,bin);
     rewind(bin);
     fclose(bin);
+    deserializer(game,data);
     return game;
 }
-
