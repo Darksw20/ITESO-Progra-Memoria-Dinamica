@@ -26,12 +26,18 @@ void AddNode(Node_ref node, Node_ref newNode);
 // Elimina el nodo 'nodeToRemove' de la lista, regresa 1 si se eliminó, 0 si no se eliminó.
 int RemoveNode(Node_ref node, int nodeValue);
 
+int RemoveAllNode(Node_ref first, int nodeValue);
+
+int ExistsNode(Node_ref first, int nodeValue);
+
+int SearchNode(Node_ref first, int nodeValue);
+
 int main()
 {
 
   // Generamos el nodo inicial de la lista
   struct Node first = {
-    .value = 25,
+    .value = 5,
     .next = NULL
   };
   Node_ref first_ref = &first;
@@ -40,8 +46,14 @@ int main()
   AddNode(first_ref, newNode(13));
   AddNode(first_ref, newNode(5));
   AddNode(first_ref, newNode(-123));
+  AddNode(first_ref, newNode(5));
+  AddNode(first_ref, newNode(13));
 
+
+
+  printf("%d\n",RemoveAllNode(first_ref,5));
   PrintList(first_ref); // [25]->[12]->[13]->[5]->[-123]
+  /*
   int wasRemoved = RemoveNode(first_ref, 5);
 
   if(wasRemoved)
@@ -51,6 +63,7 @@ int main()
 
   PrintListReverse(first_ref); // [-123]->[13]->[12]->[25]
   DestroyList(first_ref); // libera la memoria de los nodos adicionales
+  */
   return 0;
 }
 
@@ -71,6 +84,7 @@ void PrintList(Node_ref node)
     printf("[%d]->", node->value);
     node = node->next;
   }
+  printf("\n");
 }
 
 void PrintListReverse(Node_ref node)
@@ -110,8 +124,6 @@ void DestroyList(Node_ref first)
         node->next = NULL;
         node = first;
     }
-    printf("\n");
-    PrintList(first);
   // ToDo: Implementar esto :)
 }
 
@@ -141,4 +153,55 @@ int RemoveNode(Node_ref first, int nodeValue)
     }
     return 1;
   // DONE: Implementar esto :)
+}
+
+int RemoveAllNode(Node_ref first, int nodeValue){
+    int count = 0;
+    Node_ref node = first;
+    int listSize = 0;
+    while(node->next != NULL)
+    {
+        node = node->next;
+        listSize++;
+    }
+    node = first;
+    if(node->value == nodeValue){
+        node = node->next;
+        first = node;
+        listSize--;
+        count++;
+    }
+    for(int i = listSize;i>=0;i--){
+        for(int j = 1;j<i;j++){
+            node = node->next;
+        }
+        if(node->next->value == nodeValue){
+            node->next = node->next->next;
+            count++;
+        }
+        node = first;
+    }
+    return count;
+}
+
+int ExistsNode(Node_ref first, int nodeValue){
+    while(first->next != NULL){
+        if(first->value == nodeValue){
+            return 1;
+        }
+        first = first->next;
+    }
+    return 0;
+}
+
+int SearchNode(Node_ref first, int nodeValue){
+    int count = 0;
+    while(first->next != NULL){
+        if(first->value == nodeValue){
+            return count;
+        }
+        first = first->next;
+        count++;
+    }
+    return -1;
 }
